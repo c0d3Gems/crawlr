@@ -8,25 +8,34 @@
 		#include <pthread.h>
 		#include <curl/curl.h>
 
-
-		#define NY_TIMES 	(const char*)"NY_TIMES"
-		#define OTHER 		(const char*)"OTHER"
-		#define WSJ 		(const char*)"WALL_STREET_JOURNAL"
+		#define DOWNLOAD_DIRECTORY 		(const char*)"dlds/"
 
 
-		#define NY_TIMES_URL 	(const char*)"https://www.nytimes.com/"
-		#define WSJ_URL 		(const char*)"https://www.wsj.com/"
 
 
-		#define NY_TIMES_INDEX_FILE		(const char*)"nytimes.html"
-		#define WSJ_TIMES_INDEX_FILE	(const char*)"wsj.html"
+
+
+
+
+size_t getStringLength(char *str)
+{
+	if(str)
+	{
+		char *p=&str[0];
+		size_t i=1;
+		while(*p!='\0'){p++;i++;}
+		return i;
+	}
+	return 0;
+}
+
+
 
 struct string
 {
 	char* content;
 	size_t	length;
 };
-
 
 void stringInit(struct string *s)
 {
@@ -41,7 +50,38 @@ void stringInit(struct string *s)
 	s->content[0]='\0';
 }
 
-size_t writeFunction(void *ptr, size_t size, size_t nmemb, struct string *s)
+size_t findPattern(char* str, char* pat)
+{
+	size_t i=0,j=0;
+	for(i=0;str[i]!='\0';++i)
+	{
+		if(str[i]==pat[j])
+		{
+			while(str[i]==pat[j]){ ++i; ++j; }
+			if(pat[j]=='\0')
+				return i;
+			else
+				{i-=j;j=0;}
+		}
+	}
+	return 0;
+}
+
+char *getSourceFromUrl(const char* str)
+{
+	if(!str) return (char*)NULL;
+	size_t i=0,j=0, length=strlen(str);
+	char *buffer=malloc(length);
+	memset(buffer, '\0', length);
+	for (i = 0; str[i]!='\0'; ++i)
+	{
+		if((str[i]>='a'&&str[i]<='z') || (str[i]>='A'&&str[i]<='Z') || str[i]=='.' )
+			buffer[j]=str[i];
+	}
+	return buffer;
+}
+
+size_t anotherWriteFunction(void *ptr, size_t size, size_t nmemb, struct string *s)
 {
 	size_t new_len = s->length + size*nmemb;
 
@@ -63,6 +103,79 @@ size_t writeFunction(void *ptr, size_t size, size_t nmemb, struct string *s)
 	return size*nmemb;
 }
 
+const char* genIndexFileName(char *str)
+{
+	if(str==NULL || getStringLength(str)<2)
+	{
+		printf("The parameter should not be null\n");
+		exit(EXIT_FAILURE);
+	}
+	size_t i=0,j=0, strSize=getStringLength(str), totalSize=strSize+4;
+	char *res=malloc(totalSize);
+	if(res==NULL)
+	{
+		printf("ERROR mallocing the space for genIndexFileName function.\nMaybe not enough free memory?!\n");
+		exit(EXIT_FAILURE);
+	}
+	memset(res, '\0', totalSize);
+	for(i=0;str[i]!='\0';++i)
+	{
+		if((str[i]>='a'&&str[i]<='z')||\
+		   (str[i]>='A'&&str[i]<='Z')||\
+		   (str[i]>='0'&&str[i]<='9')||\
+		   	str[i]=='.')
+			{
+				res[j]=str[i];
+				j++;
+			}
+	}
+	return res;
+}
+
+size_t writeFunction(void* payload, size_t size, size_t nmemb, char* fileStream, char *url)
+{
+	if(payload)
+	{
+	
+
+		const char *indexFileHandlerName=genIndexFileName(url);
+
+		struct string *auxString;
+
+		auxString->length=size*nmemb;
+
+		auxString->content=malloc(auxString->length +1);
+
+		memset(auxString->content, '\0', auxString->length);
+
+		memcpy(auxString->content, payload, auxString->length);
+
+
+
+
+
+		// FILE *nyTimesFileHandler=fopen(indexFileHandlerName, "r");
+
+		// fseek(nyTimesFileHandler, 0L, SEEK_END);
+
+		// size_t currentBufferSize=ftell(nyTimesFileHandler);
+
+		// fclose(nyTimesFileHandler);
+
+		// nyTimesFileHandler=NULL;
+
+
+
+
+	}
+
+
+	return 	0;
+}
+
+
+
+
 
 char* simpleGetRequest(const char* url)
 {
@@ -74,6 +187,7 @@ char* simpleGetRequest(const char* url)
 	if(curl)
 	{
 		struct string s;
+		char * indexFileName=genIndexFileName(url);
 		stringInit(&s);
 
 		curl_easy_setopt(curl, CURLOPT_URL, url); //provide the url link we want to visit
@@ -89,8 +203,10 @@ char* simpleGetRequest(const char* url)
 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);	// allow redirections
 
 		res = curl_easy_perform(curl);
+
 		if(res!=CURLE_OK)
 			printf("curl_easy_perform() failed with error code: %s\n", curl_easy_strerror(res));
+		
 		curl_easy_cleanup(curl);
 		
 
@@ -98,7 +214,7 @@ char* simpleGetRequest(const char* url)
 		
 		s.content[s.length]='\0';
 		
-		FILE *outputFile = fopen(NY_TIMES_INDEX_FILE, "w");
+		FILE *outputFile = fopen(indexFileName, "w");
 		
 		fwrite(s.content, s.length, 1, outputFile);
 		
@@ -107,7 +223,8 @@ char* simpleGetRequest(const char* url)
 		outputFile=NULL;
 		
 
-
+		free(indexFileName);
+		indexFileName=NULL;
 
 		printf("Size is: %llu bytes\n", (unsigned long long )s.length);
 
@@ -118,91 +235,52 @@ char* simpleGetRequest(const char* url)
 }
 
 
-
-
-
-char* sendGET_request(const char* url, const char* source)
-{
-	CURL *curl=NULL;
-	CURLcode res;
-
-	
-	if(url && curl)
-	{
-
-		if(source == NY_TIMES)
-		{
-				struct curl_slist *chunk=NULL; // the structure where we add all of the custom headers to unlock the paid content
-				chunk = curl_slist_append(chunk, "Accept:");
-
-				return (char*)res;
-
-		}
-
-		if(source == WSJ)
-		{
-				struct curl_slist *chunk=NULL;
-				chunk = curl_slist_append(chunk, "Accept:");
-
-				return (char*)res;
-		}
-
-		res=(CURLcode)simpleGetRequest(url);
-		return (char*)res;
-	}
-	return (char*) NULL;
-}
-
-
-
-unsigned short verify(const char *source)
-{
-	if(source==NY_TIMES)
-	{
-		FILE *nyTimesFileHandler = fopen("nyTimes", "w");
-
-
-
-
-		fclose(nyTimesFileHandler);
-		
-		nyTimesFileHandler=NULL;
-	}
-	return 0;
-}
-
-
-void watchdog()
-{
-	while(1)
-	{
-		verify(NY_TIMES);
-		verify(WSJ);
-
-		sleep(30);
-	}
-}
-
-
-char* getContentFromHTML(const char* url)
-{
-
-
-
-
-	return (char*)NULL;
-}
-
-
 int main(int argc, char **argv)
 {
 
-	printf("Hello, world!\n");
-	char *rawContentNyTimes=simpleGetRequest(NY_TIMES_URL);
 
-	// printf("%s\n", rawContentNyTimes);
-	// printf("%llu\n", (unsigned long long )strlen(rawContentNyTimes));
-	free(rawContentNyTimes);
+
+	printf("Crawler initialized succesfully!\nNumber of arguments: %d\n\n\n\n",argc);
+
+
+
+
+	const char* sources[]={									
+		"https://www.nytimes.com/", 	
+		"https://www.wsj.com/",	
+		"https://techcrunch.com/", 
+		"https://www.theverge.com/",
+		"https://www.recode.net/",
+		"https://www.cnet.com/news/", 
+		"https://www.reuters.com/",
+		"https://www.theguardian.com/us",
+		"http://www.bbc.com/news",
+		"http://www.telegraph.co.uk/news/",
+		(const char*)NULL
+	};
+
+	size_t i=0;
+	printf("THE NEWS SOURCES ARE:\n\n");
+	for(i=0;sources[i];++i)
+	{
+		printf("\t%s\n", sources[i]);
+	}
+	printf("\n");
+
+	printf("Pattern found? %s\t%s %lu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "http"));
+	printf("Pattern found? %s\t%s %lu\n", sources[0], "nytimes.com", findPattern((char*)sources[1], "wsj.com"));
+	printf("Pattern found? %s\t%s %lu\n", sources[0], "nytimes.com", findPattern((char*)sources[2], "techcrunch.com"));
+	printf("Pattern found? %s\t%s %lu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimes.com"));
+	printf("Pattern found? %s\t%s %lu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimes.com"));
+	printf("Pattern found? %s\t%s %lu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimses.com"));
+
+
+	char *str=genIndexFileName((char*)sources[1]);
+
+	printf("Get index file name of %s: %s\n", sources[1], str);
+	free(str);
+	str=NULL;
+
 	return 0;
 }
 
