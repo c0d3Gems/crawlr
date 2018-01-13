@@ -8,8 +8,10 @@
 		#include <pthread.h>
 		#include <curl/curl.h>
 
-		#define DOWNLOAD_DIRECTORY 		(const char*)"dlds/"
 
+		#define CONCAT(a,b) (const char*)(a b)
+
+		#define DOWNLOAD_DIRECTORY 		(const char*)"dlds/"
 
 
 
@@ -21,9 +23,8 @@ size_t getStringLength(char *str)
 {
 	if(str)
 	{
-		char *p=&str[0];
 		size_t i=1;
-		while(*p!='\0'){p++;i++;}
+		while(str[i]!='\0')++i;
 		return i;
 	}
 	return 0;
@@ -65,7 +66,7 @@ size_t findPattern(char* str, char* pat)
 		}
 	}
 	return 0;
-}
+}//returns the ending position where the pattern was found in the greater string. 
 
 char *getSourceFromUrl(const char* str)
 {
@@ -132,23 +133,44 @@ const char* genIndexFileName(char *str)
 	return res;
 }
 
+
+char *getFilePath(char* fname)
+{
+	size_t fnameSize=getStringLength(fname), totalSize=fnameSize+6;
+	char *res=malloc(totalSize);
+	if(res!=NULL)
+	{
+		memset(res, '\0',totalSize);// valgrind loves this.
+		memcpy(res, DOWNLOAD_DIRECTORY, 6);
+		memcpy(&res[5], fname, fnameSize);
+		return res;	// needs to be freed
+	}
+	else
+	{
+		printf("Could not malloc() in function getFilePath()\n");
+		exit(EXIT_FAILURE);
+		return (char*)NULL;	//this might be rendundant since we have the exit function, but I put it anyway.
+	}
+}
+
+
 size_t writeFunction(void* payload, size_t size, size_t nmemb, char* fileStream, char *url)
 {
 	if(payload)
 	{
 	
 
-		const char *indexFileHandlerName=genIndexFileName(url);
+		// const char *indexFileHandlerName=genIndexFileName(url);
 
-		struct string *auxString;
+		// struct string *auxString;
 
-		auxString->length=size*nmemb;
+		// auxString->length=size*nmemb;
 
-		auxString->content=malloc(auxString->length +1);
+		// auxString->content=malloc(auxString->length +1);
 
-		memset(auxString->content, '\0', auxString->length);
+		// memset(auxString->content, '\0', auxString->length);
 
-		memcpy(auxString->content, payload, auxString->length);
+		// memcpy(auxString->content, payload, auxString->length);
 
 
 
@@ -167,6 +189,11 @@ size_t writeFunction(void* payload, size_t size, size_t nmemb, char* fileStream,
 
 
 
+	}
+	else
+	{
+		printf("ERROR writeFunction(): The payload should not be empty\n");
+		exit(EXIT_FAILURE);
 	}
 
 
@@ -259,27 +286,45 @@ int main(int argc, char **argv)
 		(const char*)NULL
 	};
 
+
+
 	size_t i=0;
 	printf("THE NEWS SOURCES ARE:\n\n");
 	for(i=0;sources[i];++i)
-	{
 		printf("\t%s\n", sources[i]);
+	printf("\n");
+
+
+
+
+
+
+	// some testing
+
+	for(i=0;sources[i];++i)
+	{
+		char *fIndex=genIndexFileName(sources[i]);
+		char *fpath=getFilePath(fIndex);
+		printf("The indexFilePath for %s is:\t\t%s\n", fIndex, fpath);
+		free(fIndex);
+		fIndex=NULL;
+		free(fpath);
+		fpath=NULL;
 	}
+
+
+
+
+
+
 	printf("\n");
 
 	printf("Pattern found? %s\t%s %lu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "http"));
-	printf("Pattern found? %s\t%s %lu\n", sources[0], "nytimes.com", findPattern((char*)sources[1], "wsj.com"));
-	printf("Pattern found? %s\t%s %lu\n", sources[0], "nytimes.com", findPattern((char*)sources[2], "techcrunch.com"));
+	printf("Pattern found? %s\t%s %lu\n", sources[1], "wsj.com", findPattern((char*)sources[1], "wsj.com"));
+	printf("Pattern found? %s\t%s %lu\n", sources[2], "techcrunch.com", findPattern((char*)sources[2], "techcrunch.com"));
 	printf("Pattern found? %s\t%s %lu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimes.com"));
 	printf("Pattern found? %s\t%s %lu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimes.com"));
 	printf("Pattern found? %s\t%s %lu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimses.com"));
-
-
-	char *str=genIndexFileName((char*)sources[1]);
-
-	printf("Get index file name of %s: %s\n", sources[1], str);
-	free(str);
-	str=NULL;
 
 	return 0;
 }
