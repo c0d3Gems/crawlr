@@ -104,6 +104,7 @@ size_t anotherWriteFunction(void *ptr, size_t size, size_t nmemb, struct string 
 	return size*nmemb;
 }
 
+
 const char* genIndexFileName(char *str)
 {
 	if(str==NULL || getStringLength(str)<2)
@@ -154,112 +155,152 @@ char *getFilePath(char* fname)
 }
 
 
-size_t writeFunction(void* payload, size_t size, size_t nmemb, char* fileStream, char *url)
-{
-	if(payload)
-	{
+// size_t writeFunction(void* payload, size_t size, size_t nmemb, char* fileStream, char *url)
+// {
+// 	if(payload!=NULL)
+// 	{
 	
 
-		// const char *indexFileHandlerName=genIndexFileName(url);
+// 		// const char *indexFileHandlerName=genIndexFileName(url);
 
-		// struct string *auxString;
+// 		// struct string *auxString;
 
-		// auxString->length=size*nmemb;
+// 		// auxString->length=size*nmemb;
 
-		// auxString->content=malloc(auxString->length +1);
+// 		// auxString->content=malloc(auxString->length +1);
 
-		// memset(auxString->content, '\0', auxString->length);
+// 		// memset(auxString->content, '\0', auxString->length);
 
-		// memcpy(auxString->content, payload, auxString->length);
-
-
-
-
-
-		// FILE *nyTimesFileHandler=fopen(indexFileHandlerName, "r");
-
-		// fseek(nyTimesFileHandler, 0L, SEEK_END);
-
-		// size_t currentBufferSize=ftell(nyTimesFileHandler);
-
-		// fclose(nyTimesFileHandler);
-
-		// nyTimesFileHandler=NULL;
-
-
-
-
-	}
-	else
-	{
-		printf("ERROR writeFunction(): The payload should not be empty\n");
-		exit(EXIT_FAILURE);
-	}
-
-
-	return 	0;
-}
+// 		// memcpy(auxString->content, payload, auxString->length);
 
 
 
 
 
-char* simpleGetRequest(const char* url)
+// 		// FILE *nyTimesFileHandler=fopen(indexFileHandlerName, "r");
+
+// 		// fseek(nyTimesFileHandler, 0L, SEEK_END);
+
+// 		// size_t currentBufferSize=ftell(nyTimesFileHandler);
+
+// 		// fclose(nyTimesFileHandler);
+
+// 		// nyTimesFileHandler=NULL;
+
+
+
+
+// 	}
+// 	else
+// 	{
+// 		printf("ERROR writeFunction(): The payload should not be empty\n");
+// 		exit(EXIT_FAILURE);
+// 	}
+
+
+// 	return 	0;
+// }
+
+void simpleGetRequest(const char* url)
 {
-
 	CURL *curl;
 	CURLcode res;
 
 	curl = curl_easy_init();
-	if(curl)
-	{
-		struct string s;
-		char * indexFileName=genIndexFileName(url);
-		stringInit(&s);
 
-		curl_easy_setopt(curl, CURLOPT_URL, url); //provide the url link we want to visit
-
-		// curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeFunction); //call a custom writefunction instead of fwrite
-
-		// curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);//where to write the output 
-
-		curl_easy_setopt(curl, CURLOPT_USERAGENT, "libcurl-agent/1.0");
-
-		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L); // do not check for the ssl certificate authenticity 
-
-		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);	// allow redirections
-
-		res = curl_easy_perform(curl);
-
-		if(res!=CURLE_OK)
-			printf("curl_easy_perform() failed with error code: %s\n", curl_easy_strerror(res));
-		
-		curl_easy_cleanup(curl);
-		
-
-
-		
-		s.content[s.length]='\0';
-		
-		FILE *outputFile = fopen(indexFileName, "w");
-		
-		fwrite(s.content, s.length, 1, outputFile);
-		
-		fclose(outputFile);
-		
-		outputFile=NULL;
-		
-
-		free(indexFileName);
-		indexFileName=NULL;
-
-		printf("Size is: %llu bytes\n", (unsigned long long )s.length);
-
-
-		return (char*) &s.content[0];
-	}
-	return (char*) NULL;
 }
+
+size_t writeFunction(void* payload, size_t size, size_t times, char* str)
+{
+	if(str!=NULL)
+	{
+		// char *fname=genIndexFileName(sources[])
+	}
+	printf("ERROR - the forth parameter is empty\n");
+	exit(EXIT_FAILURE);
+	return 0;
+}
+
+void* threadFunc(void* param)// function enclosure for our thread calls
+{
+	simpleGetRequest((const char*)param);
+	return NULL;
+}
+
+
+size_t writeFunctionCaller(const char **sources, size_t vecSize) // in a multi threaded environment, here we spawn the threads
+{
+	size_t i=0;
+	pthread_t threads[(const unsigned int)vecSize];
+	for(i=0;i<vecSize;++i)
+	{
+		if(pthread_create(&threads[i], NULL, threadFunc, (void*)&sources[i]))
+		{
+			printf("ERROR spawning thread %lu\n", i);
+			exit(EXIT_FAILURE);
+		}
+		printf("Thread %lu spawned!\n", i);
+	}
+	printf("\n");
+}
+
+
+// char* simpleGetRequest(const char* url)
+// {
+
+// 	CURL *curl;
+// 	CURLcode res;
+
+// 	curl = curl_easy_init();
+// 	if(curl)
+// 	{
+// 		struct string s;
+// 		char * indexFileName=genIndexFileName(url);
+// 		stringInit(&s);
+
+// 		curl_easy_setopt(curl, CURLOPT_URL, url); //provide the url link we want to visit
+
+// 		// curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeFunction); //call a custom writefunction instead of fwrite
+
+// 		// curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);//where to write the output 
+
+// 		curl_easy_setopt(curl, CURLOPT_USERAGENT, "libcurl-agent/1.0");
+
+// 		curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0L); // do not check for the ssl certificate authenticity 
+
+// 		curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L);	// allow redirections
+
+// 		res = curl_easy_perform(curl);
+
+// 		if(res!=CURLE_OK)
+// 			printf("curl_easy_perform() failed with error code: %s\n", curl_easy_strerror(res));
+		
+// 		curl_easy_cleanup(curl);
+		
+
+
+		
+// 		s.content[s.length]='\0';
+		
+// 		FILE *outputFile = fopen(indexFileName, "w");
+		
+// 		fwrite(s.content, s.length, 1, outputFile);
+		
+// 		fclose(outputFile);
+		
+// 		outputFile=NULL;
+		
+
+// 		free(indexFileName);
+// 		indexFileName=NULL;
+
+// 		printf("Size is: %llu bytes\n", (unsigned long long )s.length);
+
+
+// 		return (char*) &s.content[0];
+// 	}
+// 	return (char*) NULL;
+// }
 
 
 int main(int argc, char **argv)
@@ -292,10 +333,10 @@ int main(int argc, char **argv)
 	printf("THE NEWS SOURCES ARE:\n\n");
 	for(i=0;sources[i];++i)
 		printf("\t%s\n", sources[i]);
-	printf("\n");
 
+	printf("\nNumber of sources: %lu\n\n", i);
 
-
+	writeFunctionCaller(sources, i);
 
 
 
@@ -324,7 +365,7 @@ int main(int argc, char **argv)
 	printf("Pattern found? %s\t%s %lu\n", sources[2], "techcrunch.com", findPattern((char*)sources[2], "techcrunch.com"));
 	printf("Pattern found? %s\t%s %lu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimes.com"));
 	printf("Pattern found? %s\t%s %lu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimes.com"));
-	printf("Pattern found? %s\t%s %lu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimses.com"));
+	printf("Pattern found? %s\t%s %lu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimes.com"));
 
 	return 0;
 }
