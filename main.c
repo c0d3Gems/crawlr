@@ -215,7 +215,7 @@ int main(int argc, char **argv)
 	printf("Pattern found? %s\t%s %llu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimes.com"));
 
 
-	printf("The file size of main.c is: %llu\n", getFileSize((const char*)"main.c"));
+	printf("The file size of main.c is: %llu bytes\n", getFileSize((const char*)"main.c"));
 
 	struct timeFormat* time=getCurrentTime();
 
@@ -224,6 +224,15 @@ int main(int argc, char **argv)
 
 	free(time);
 	time=NULL;
+
+
+
+	int k=-9999;
+	int digits=countDigits(k);
+	char *p=toString(-k, '-');
+	printf("result: %s\n", p);
+	free(p);
+	p=NULL;
 	return 0;
 }
 

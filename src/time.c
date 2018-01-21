@@ -28,3 +28,21 @@
 		timev->second=tm.tm_sec;
 		return timev;
 	}
+
+	char* getTimeHeader(struct timeFormat *time)
+	{
+		char* hour;
+		char* minute;
+		char* second;
+		char* day;
+		char* month;
+		char* year;
+
+		unsigned int copy=(unsigned int)time->hour;
+		if(copy<10)
+		{
+
+		}
+	}
+
+	
