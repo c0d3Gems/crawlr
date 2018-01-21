@@ -11,6 +11,7 @@
 		#include <stdlib.h>
 		#include <pthread.h>
 		#include <string.h>
+		#include <time.h>
 		#include <unistd.h>
 		#include <curl/curl.h>
 		// standard libraries
@@ -20,6 +21,7 @@
 		#include "threading.h"
 		#include "requests.h"
 		#include "log.h"
+		#include "time.h"
 		// custom libraries
 
 
@@ -49,6 +51,15 @@
 
 
 //crawler specific function headers	
+
+	unsigned long long getFileSize(const char *fpath);
+	//function that returns 0 if file could not be opened
+	//						1 if file exists, but it's empty
+	//					   	the file size +1
+
+
+	unsigned short printLog(char* str,unsigned short LOGGING_MODE);
+	//custom writing function for log & console
 
 
 		

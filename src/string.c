@@ -46,3 +46,17 @@
 			}
 			return 0;
 		}
+
+		unsigned short duplicate(char *a, char* b)
+		{
+			char *pa=a,*pb=b;
+			while(true)
+			{
+				if(*pa!=*pb)
+					return false;
+				if(*pa=='\0'&&*pb=='\0')
+					return true;
+				pa++;
+				pb++;
+			}
+		}

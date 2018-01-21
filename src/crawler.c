@@ -1,10 +1,37 @@
 
 	#include "../include/crawler.h"
 
+		
 
 
+		unsigned long long getFileSize(const char *fpath)
+		{
+			FILE *fHandler=fopen(fpath, "r");
+			if(fHandler)
+			{
+				unsigned long long size=0;
+				fseek(fHandler, 0L, SEEK_END);
+				size=ftell(fHandler)+1;
+				fclose(fHandler);
+				fHandler=NULL;
+				return size;
+			}
+			return 0;
+		}
 
-
+		unsigned short printLog(char* str,unsigned short LOGGING_MODE)
+		{
+			switch(LOGGING_MODE){
+				case 0x1://quiet (only in log file)
+				break;
+				case 0x2://muted (nowhere)
+				break;
+				case 0x0://print everywhere
+				break;
+				default:break;
+				//in theory, this case should never reach the default stage
+			}
+		}
 			
 		char *getSourceFromUrl(const char* str)
 		{
@@ -24,11 +51,7 @@
 
 
 		unsigned short 
-		customWriteFunction(
-			void *ptr, 
-			size_t size,
-		 	size_t nmemb, 
-		 	struct string *s)
+		customWriteFunction(void *ptr, size_t size, size_t nmemb, struct string *s)
 		{
 			size_t new_len = s->length + size*nmemb;
 
@@ -36,9 +59,7 @@
 			s->content=NULL;
 			s->content=malloc(new_len+1);
 			memset(s->content, '\0', new_len+1);
-
 			if(s->content==NULL)
-
 			{
 				printf("ERROR realloc() \n");
 				exit(EXIT_FAILURE);
@@ -116,7 +137,7 @@
 			pthread_t threads[(const unsigned int)vecSize];
 			for(i=0;i<vecSize;++i)
 			{
-				char* str=sources[i];
+				char* str=(char*)sources[i];
 				if(pthread_create(&threads[i], NULL, threadFunc, (void*)str))
 				{
 					printf("ERROR spawning thread %lu\n", i);

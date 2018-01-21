@@ -7,9 +7,6 @@
 
 
 
-
-
-
 // size_t writeFunction(void* payload, size_t size, size_t nmemb, char* fileStream, char *url)
 // {
 // 	if(payload!=NULL)
@@ -125,7 +122,30 @@ int main(int argc, char **argv)
 
 	printf("Crawler initialized succesfully!\nNumber of arguments: %d\n\n\n\n",argc);
 
+	static inline unsigned short LOGGING_MODE = 0x0;
 
+
+	if(argc>1)
+	{
+		size_t i=0;
+		for(i=0;i<argc;++i)
+		{
+			if(duplicate(argv[i], "-q"))
+			{
+				LOGGING_MODE = 0x1;
+				//quiet (prints only in logfile, but not in the stdout)
+				break;
+			}
+			if(duplicate(argv[i], "-m"))
+			{
+				LOGGING_MODE = 0x2;
+				//muted (does not print to either logfile or stdout)
+				break;
+			}
+		}
+	}
+
+	printf("The LOGGING_MODE is: %u\n", (unsigned long)LOGGING_MODE);
 
 
 	const char* sources[]={									
@@ -139,6 +159,21 @@ int main(int argc, char **argv)
 		"https://www.theguardian.com/us",
 		"http://www.bbc.com/news",
 		"http://www.telegraph.co.uk/news/",
+		(const char*)NULL
+	};
+
+
+	const char* fpath[]={									
+		"dlds/nytimes", 	
+		"dlds/wsj",	
+		"dlds/techcrunch", 
+		"dlds/theverge",
+		"dlds/recode",
+		"dlds/cnet", 
+		"dlds/reuters",
+		"dlds/theguardian",
+		"dlds/bbc",
+		"dlds/telegraph",
 		(const char*)NULL
 	};
 
@@ -172,16 +207,23 @@ int main(int argc, char **argv)
 
 
 	printf("\n");
-	printf("Pattern found? %s\t%s %lu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "http"));
-	printf("Pattern found? %s\t%s %lu\n", sources[1], "wsj.com", findPattern((char*)sources[1], "wsj.com"));
-	printf("Pattern found? %s\t%s %lu\n", sources[2], "techcrunch.com", findPattern((char*)sources[2], "techcrunch.com"));
-	printf("Pattern found? %s\t%s %lu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimes.com"));
-	printf("Pattern found? %s\t%s %lu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimes.com"));
-	printf("Pattern found? %s\t%s %lu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimes.com"));
+	printf("Pattern found? %s\t%s %llu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "http"));
+	printf("Pattern found? %s\t%s %llu\n", sources[1], "wsj.com", findPattern((char*)sources[1], "wsj.com"));
+	printf("Pattern found? %s\t%s %llu\n", sources[2], "techcrunch.com", findPattern((char*)sources[2], "techcrunch.com"));
+	printf("Pattern found? %s\t%s %llu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimes.com"));
+	printf("Pattern found? %s\t%s %llu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimes.com"));
+	printf("Pattern found? %s\t%s %llu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimes.com"));
 
 
+	printf("The file size of main.c is: %llu\n", getFileSize((const char*)"main.c"));
+
+	struct timeFormat* time=getCurrentTime();
+
+		printf("The current time is: %u:%u:%u\n", time->hour, time->minute, time->second);
 
 
+	free(time);
+	time=NULL;
 	return 0;
 }
 

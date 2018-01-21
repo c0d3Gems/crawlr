@@ -25,4 +25,8 @@
 
 
 
+		unsigned short duplicate(char* a, char *b);
+		//returns 1 (true) if str a is equal to str b
+		//returns 0 (false) if str a is not equal to str b
+
 	#endif	
