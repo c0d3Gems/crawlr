@@ -222,9 +222,6 @@ int main(int argc, char **argv)
 		printf("The current time is: %u:%u:%u\n", time->hour, time->minute, time->second);
 
 
-	free(time);
-	time=NULL;
-
 
 
 	int k=-9999;
@@ -233,6 +230,15 @@ int main(int argc, char **argv)
 	printf("result: %s\n", p);
 	free(p);
 	p=NULL;
+
+
+
+
+	printf("%s\n", getTimeHeader(time));
+	
+	free(time);
+	time=NULL;
+
 	return 0;
 }
 

@@ -19,6 +19,6 @@
 
 			char* getTimeHeader(struct timeFormat *time);
 			//function that converts the input timeFormat to a string. 
-			//[hours:minutes:seconds_month-day-year]
+			//[hours:minutes:seconds_month.day.year]
 
 		#endif	
