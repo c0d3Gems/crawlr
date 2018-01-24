@@ -233,12 +233,13 @@ int main(int argc, char **argv)
 
 
 
-
-	printf("%s\n", getTimeHeader(time));
+	char *timeHeader=getTimeHeader(time);
+	printf("%s\n", timeHeader);
 	
+	free(timeHeader);
+	timeHeader=NULL;
 	free(time);
 	time=NULL;
-
 	return 0;
 }
 
