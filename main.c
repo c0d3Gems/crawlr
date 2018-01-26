@@ -238,8 +238,10 @@ int main(int argc, char **argv)
 	
 	free(timeHeader);
 	timeHeader=NULL;
+
 	free(time);
 	time=NULL;
+	
 	return 0;
 }
 
