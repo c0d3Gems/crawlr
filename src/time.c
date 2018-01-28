@@ -4,15 +4,13 @@
 	#include "../include/crawler.h"
 
 
-
-
-
 	struct timeFormat* getCurrentTime(void)
 	{
+		
 		struct timeFormat *timev=malloc(sizeof(struct timeFormat)+1);
 		if(!timev)
 		{
-			printf("Could not malloc space for time variable\n");
+			printLog("Could not malloc space for time variable\n");
 			exit(EXIT_FAILURE);
 		}
 		
@@ -53,7 +51,6 @@
 		unsigned long long yearLength=getStringLength(year);
 
 		unsigned long long size=1+hourLength+minuteLength+secondLength+dayLength+yearLength+7;
-		printf("SIZE IS %llu\n", size);
 
 		char* res=malloc(size+1);
 		if(res==NULL)
@@ -65,7 +62,7 @@
 		memset(res, '\0', size+1);
 
 		unsigned short i=1;
-		res[0]='[';char*p=(char*)NULL;
+		res[0]='[';
 		memcpy(&res[i], hour, hourLength);
 		i+=hourLength+1;
 		res[i-1]=':';

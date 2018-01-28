@@ -24,7 +24,7 @@
 			memset(s->content, '\0', s->length+1);
 			if(s->content==NULL)
 			{
-				printf("malloc() failed\n");
+				printLog("stringInit(): malloc failed\n");
 				exit(EXIT_FAILURE);
 			}
 			s->content[0]='\0';

@@ -122,7 +122,7 @@ int main(int argc, char **argv)
 
 	printf("Crawler initialized succesfully!\nNumber of arguments: %d\n\n\n\n",argc);
 
-	static inline unsigned short LOGGING_MODE = 0x0;
+	LOGGING_MODE = 0x0;
 
 
 	if(argc>1)
@@ -236,12 +236,17 @@ int main(int argc, char **argv)
 	char *timeHeader=getTimeHeader(time);
 	printf("%s\n", timeHeader);
 	
+
+	char logMsg[]="sample erro msgoaisjdoiajsdoa";
+	printLog(logMsg);
+
 	free(timeHeader);
 	timeHeader=NULL;
 
 	free(time);
 	time=NULL;
 	
+
 	return 0;
 }
 

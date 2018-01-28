@@ -49,6 +49,13 @@
 		#endif
 
 
+		extern unsigned short LOGGING_MODE;
+		//variable used for log writing modes
+
+
+
+
+
 
 //crawler specific function headers	
 
@@ -58,8 +65,8 @@
 	//					   	the file size +1
 
 
-	unsigned short printLog(char* str,unsigned short LOGGING_MODE);
-	//custom writing function for log & console
+	void printLog(char* str);
+	//custom writing function for log & console operation information
 
 
 		
@@ -68,7 +75,8 @@
 
 
 
-	unsigned short customWriteFunction(void* payload,size_t size,size_t times,struct string* str);
+	unsigned short
+	customWriteFunction(void* payload,size_t size,size_t times,struct string* str);
 	//custom fwrite implmentation to fit our crawler's needs
 
 
