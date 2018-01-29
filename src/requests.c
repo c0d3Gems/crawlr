@@ -2,9 +2,7 @@
 
 	#include "../include/crawler.h"
 
-		const char* sources[11];
-		const char* fpath[11];
-
+		
 		void simpleGetRequest(const char* url)
 		{
 			CURL *curl;

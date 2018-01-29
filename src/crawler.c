@@ -8,10 +8,7 @@
 	unsigned long long NUMBER_OF_WRAPPER_OBJECTS;
 
 
-	struct wrapperStruct* wrapper;
-
-	const char* sources[];
-	const char* fpath[];
+	struct wrapperStruct* wrapper[];
 
 		unsigned long long getFileSize(const char *fpath)
 		{
@@ -319,64 +316,93 @@
 			LOGFILE_SIZE=0;
 		}
 
-		void wrapperInit()
+		void wrapperInit()// to be called only once. 
 		{
 			size_t i=0;
-			// if(wrapper==NULL)
-			// 	wrapper=malloc(sizeof(struct wrapperStruct)*NUMBER_OF_WRAPPER_OBJECTS);
+			printf("NUMBER_OF_WRAPPER_OBJECTS %llu\n", NUMBER_OF_WRAPPER_OBJECTS);
+			struct wrapperStruct* p=&wrapper[0];
 
-			struct wrapperStruct* p=wrapper;
-			for(i=0;i<NUMBER_OF_WRAPPER_OBJECTS;++i,++p)
+			for(i=0 ; i<NUMBER_OF_WRAPPER_OBJECTS; ++i)
 			{
-					
-				p= malloc(sizeof(struct wrapperStruct)+1);
-				printLog("wrapperInit() allocating space for");
-				char *str=toString(i, NULL);
-				printLog(str);
-				free(str);
-				str=NULL;
+				printf("SOURCE: %s\n", sources[i]);	
+				p=&wrapper[i];
+				p=malloc(sizeof(struct wrapperStruct)+1);
+				printLog("wrapperInit() allocating space for new source: ");
+				printLog(sources[i]);
 
 				p->urlSize=getStringLength(sources[i]);
 				p->url=malloc(p->urlSize+1);
 				memset(p->url, '\0', p->urlSize+1);
+				printf("urlSize: %llu\n", p->urlSize);
 				memcpy(p->url, sources[i], p->urlSize);
 
 				p->fpathSize=getStringLength(fpath[i]);
+				printf("FpathSize: %llu\n", p->fpathSize);
 				p->fpath=malloc(p->fpathSize +1);
 				memset(p->fpath, '\0', p->fpathSize+1);
 				memcpy(p->fpath, fpath[i], p->fpathSize);
 
+				p->numberOfArticles=0;
 				p->article=NULL;
 			}
-			p=NULL;
 		}
 
 
+		void articleInit
+		(struct articleStruct* art, const char* url){
 
-
-		void addToWrapperByUrl(struct wrapperStruct* x, const char* url){
-			struct wrapperStruct* p=wrapper;
-			while(!duplicate(p->url, url))
-				p++;
-
-			struct articleStruct* pArticle=p->article;
-			if(pArticle==NULL)
-				pArticle=malloc(sizeof(struct articleStruct)+1);
-			// else
-				// pArticle=realloc()
-			if(!pArticle)
+			if(art==NULL)
 			{
-				printLog("addToWrapperByUrl() could not malloc memory for new article");
-				exit(EXIT_FAILURE);
+				art=malloc( sizeof(struct articleStruct) +1 );
+				art->urlSize=getStringLength(url);
+				art->url=malloc(art->urlSize+1);
+				memset (art->url, '\0', art->urlSize+1);
+				memcpy (art->url,  url, art->urlSize);
+
+				art->titleSize=0;
+				art->contentSize=0;
+
+				art->title=(char*)NULL;
+				art->content=(char*)NULL;
+				art->imgList=(struct imgListStruct*)NULL;
+
+				printLog("articleInit() Article allocated succesfully.");
+				return;
 			}
-			printLog("addToWrapperByUrl() allocating space for new article...");
-			
+			printLog("articleInit() Failed to allocate memory for new article");
+			exit(EXIT_FAILURE);
 		}
 
-		// void freeWrapper()
-		// {
-		// 	size_t i=0;
-		// 	for(i=0;i<NUMBER_OF_WRAPPER_OBJECTS;++i)
-		// 	{
-		// 	}
-		// }
+		void freeWrapper(struct wrapperStruct* wrap)
+		{
+			size_t i=0;
+			for(i=0;i<NUMBER_OF_WRAPPER_OBJECTS;++i)
+			{
+	
+					if(wrap->fpath!=NULL)
+					{
+						free(wrap->fpath);
+						wrap->fpath=NULL;
+					}
+					if(wrap->url!=NULL)
+					{
+						free(wrap->url);
+						wrap->url=NULL;
+					}
+					wrap->fpathSize=0;
+					wrap->urlSize=0;
+					free(wrap);
+					wrap=NULL;
+			
+			}
+		}
+
+
+		void printSources()
+		{
+			size_t i=0;
+			for(i=0;i<NUMBER_OF_WRAPPER_OBJECTS;++i)
+			{
+				printf("WRAPPER OBJECT %s\n", sources[i]);
+			}
+		}

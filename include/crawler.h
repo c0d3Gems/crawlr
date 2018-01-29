@@ -60,6 +60,36 @@
 		extern unsigned long long NUMBER_OF_WRAPPER_OBJECTS;
 		//to keep track of the number of wrapper objects
 
+		// extern  const char* sources[];
+		// extern const char* fpath[];
+		static char* sources[]={									
+				"https://www.nytimes.com/", 	
+				"https://www.wsj.com/",	
+				"https://techcrunch.com/", 
+				"https://www.theverge.com/",
+				"https://www.recode.net/",
+				"https://www.cnet.com/news/", 
+				"https://www.reuters.com/",
+				"https://www.theguardian.com/us",
+				"http://www.bbc.com/news",
+				"http://www.telegraph.co.uk/news/",
+				(const char*)NULL
+			};
+
+		static const char* fpath[]={									
+				"dlds/nytimes", 	
+				"dlds/wsj",	
+				"dlds/techcrunch", 
+				"dlds/theverge",
+				"dlds/recode",
+				"dlds/cnet", 
+				"dlds/reuters",
+				"dlds/theguardian",
+				"dlds/bbc",
+				"dlds/telegraph",
+				(const char*)NULL
+			};
+
 		extern struct imgListStruct
 		{
 			char **img;
@@ -74,7 +104,7 @@
 			char *url;
 			char *title;
 			char *content;
-			struct imgListStruct* imgList;
+			struct imgListStruct** imgList;
 		};
 
 		extern struct wrapperStruct
@@ -84,14 +114,10 @@
 			unsigned long long numberOfArticles;
 			char* url;
 			char* fpath;
-			struct articleStruct* article;
+			struct articleStruct** article;
 		};
 
-		extern struct wrapperStruct* wrapper;
-
-		extern const char* sources[];
-
-		extern const char* fpath[];
+		extern struct wrapperStruct* wrapper[];
 
 //crawler specific function headers	
 

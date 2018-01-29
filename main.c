@@ -147,36 +147,6 @@ int main(int argc, char **argv)
 
 	printf("The LOGGING_MODE is: %u\n", (unsigned long)LOGGING_MODE);
 
-	const char* sources[]={									
-				"https://www.nytimes.com/", 	
-				"https://www.wsj.com/",	
-				"https://techcrunch.com/", 
-				"https://www.theverge.com/",
-				"https://www.recode.net/",
-				"https://www.cnet.com/news/", 
-				"https://www.reuters.com/",
-				"https://www.theguardian.com/us",
-				"http://www.bbc.com/news",
-				"http://www.telegraph.co.uk/news/",
-				(const char*)NULL
-			};
-
-	const char* fpath[]={									
-				"dlds/nytimes", 	
-				"dlds/wsj",	
-				"dlds/techcrunch", 
-				"dlds/theverge",
-				"dlds/recode",
-				"dlds/cnet", 
-				"dlds/reuters",
-				"dlds/theguardian",
-				"dlds/bbc",
-				"dlds/telegraph",
-				(const char*)NULL
-			};
-
-
-
 
 
 	printf("THE NEWS SOURCES ARE:\n\n");
@@ -224,22 +194,10 @@ int main(int argc, char **argv)
 
 
 
-
-	int k=-9999;
-	int digits=countDigits(k);
-	char *p=toString(-k, '-');
-	printf("result: %s\n", p);
-	free(p);
-	p=NULL;
-
-
-
+	
 	char *timeHeader=getTimeHeader(time);
 	printf("%s\n", timeHeader);
 	
-
-	char logMsg[]="sample erro msgoaisjdoiajsdoa";
-	printLog(logMsg);
 
 	free(timeHeader);
 	timeHeader=NULL;
@@ -248,6 +206,26 @@ int main(int argc, char **argv)
 	time=NULL;
 
 	
+
+
+	printf("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\n\n\n\n\n");
+
+
+
+
+
+
+
+	wrapperInit();
+
+
+
+
+	freeWrapper();
+
+
+
+
 
 	return 0;
 }
