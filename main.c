@@ -117,13 +117,13 @@
 
 int main(int argc, char **argv)
 {
-
-
-
 	printf("Crawler initialized succesfully!\nNumber of arguments: %d\n\n\n\n",argc);
 
 	LOGGING_MODE = 0x0;
+	LOGFILE_SIZE=getFileSize(LOGFILE);
+	NUMBER_OF_WRAPPER_OBJECTS=0;
 
+	printf("[LOGFILE_SIZE] is: %llu bytes!\n", LOGFILE_SIZE);
 
 	if(argc>1)
 	{
@@ -147,48 +147,49 @@ int main(int argc, char **argv)
 
 	printf("The LOGGING_MODE is: %u\n", (unsigned long)LOGGING_MODE);
 
-
 	const char* sources[]={									
-		"https://www.nytimes.com/", 	
-		"https://www.wsj.com/",	
-		"https://techcrunch.com/", 
-		"https://www.theverge.com/",
-		"https://www.recode.net/",
-		"https://www.cnet.com/news/", 
-		"https://www.reuters.com/",
-		"https://www.theguardian.com/us",
-		"http://www.bbc.com/news",
-		"http://www.telegraph.co.uk/news/",
-		(const char*)NULL
-	};
-
+				"https://www.nytimes.com/", 	
+				"https://www.wsj.com/",	
+				"https://techcrunch.com/", 
+				"https://www.theverge.com/",
+				"https://www.recode.net/",
+				"https://www.cnet.com/news/", 
+				"https://www.reuters.com/",
+				"https://www.theguardian.com/us",
+				"http://www.bbc.com/news",
+				"http://www.telegraph.co.uk/news/",
+				(const char*)NULL
+			};
 
 	const char* fpath[]={									
-		"dlds/nytimes", 	
-		"dlds/wsj",	
-		"dlds/techcrunch", 
-		"dlds/theverge",
-		"dlds/recode",
-		"dlds/cnet", 
-		"dlds/reuters",
-		"dlds/theguardian",
-		"dlds/bbc",
-		"dlds/telegraph",
-		(const char*)NULL
-	};
+				"dlds/nytimes", 	
+				"dlds/wsj",	
+				"dlds/techcrunch", 
+				"dlds/theverge",
+				"dlds/recode",
+				"dlds/cnet", 
+				"dlds/reuters",
+				"dlds/theguardian",
+				"dlds/bbc",
+				"dlds/telegraph",
+				(const char*)NULL
+			};
 
+
+
+
+
+	printf("THE NEWS SOURCES ARE:\n\n");
+	for(NUMBER_OF_WRAPPER_OBJECTS=0;sources[NUMBER_OF_WRAPPER_OBJECTS];++NUMBER_OF_WRAPPER_OBJECTS)
+		printf("\t%s\n", sources[NUMBER_OF_WRAPPER_OBJECTS]);
+
+
+	printf("\nNumber of sources: %lu\n\n", NUMBER_OF_WRAPPER_OBJECTS);
+
+	writeFunctionCaller(sources, NUMBER_OF_WRAPPER_OBJECTS);
 
 
 	size_t i=0;
-	printf("THE NEWS SOURCES ARE:\n\n");
-	for(i=0;sources[i];++i)
-		printf("\t%s\n", sources[i]);
-
-	printf("\nNumber of sources: %lu\n\n", i);
-
-	writeFunctionCaller(sources, i);
-
-
 
 	// some testing
 
@@ -245,6 +246,7 @@ int main(int argc, char **argv)
 
 	free(time);
 	time=NULL;
+
 	
 
 	return 0;

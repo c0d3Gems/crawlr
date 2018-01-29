@@ -3,6 +3,15 @@
 
 		
 	unsigned short LOGGING_MODE;
+	unsigned long long LOGFILE_SIZE;
+
+	unsigned long long NUMBER_OF_WRAPPER_OBJECTS;
+
+
+	struct wrapperStruct* wrapper;
+
+	const char* sources[];
+	const char* fpath[];
 
 		unsigned long long getFileSize(const char *fpath)
 		{
@@ -33,7 +42,6 @@
 
 				case 0x1:
 				//quiet (only in log file) triggered by the flag -q: ex. ./crawler -q
-
 					currentTime=getCurrentTime();
 					timeHeader=getTimeHeader(currentTime);
 					free(currentTime);
@@ -61,7 +69,7 @@
 					free(timeHeader);
 					timeHeader=NULL;
 
-					logHandler=fopen("log.txt", "a");
+					logHandler=fopen(LOGFILE, "a");
 					if(!logHandler)
 					{
 						printf("Could not open logFile\n");
@@ -74,6 +82,7 @@
 
 					free(res);
 					res=NULL;
+					return;
 				break;
 
 				case 0x2:
@@ -86,13 +95,10 @@
 					timeHeader=getTimeHeader(currentTime);
 					free(currentTime);
 					currentTime=NULL;
-
 					timeHeaderSize=getStringLength(timeHeader);
 
 					strSize=getStringLength(str);
 					resSize=timeHeaderSize+strSize+2;
-
-					printf("RESSIZE = %llu\n", resSize);
 					res=malloc(resSize);
 					
 					if(res==NULL)
@@ -112,7 +118,7 @@
 					timeHeader=NULL;
 
 
-					logHandler=fopen("log.txt", "a");
+					logHandler=fopen(LOGFILE, "a");
 					if(logHandler==NULL)
 					{
 						printf("Could not open logFile\n");
@@ -142,10 +148,10 @@
 			memset(buffer, '\0', length);
 			for (i = 0; str[i]!='\0'; ++i)
 			{
-				if((str[i]>='a'&&str[i]<='z') ||
-				   (str[i]>='A'&&str[i]<='Z') ||
-				    str[i]=='.' )
-					buffer[j]=str[i];
+				if(( str[i]>='a'&&str[i]<='z') ||
+				   ( str[i]>='A'&&str[i]<='Z') ||
+				     str[i]=='.' )
+					 buffer[j]=str[i];
 			}
 			return buffer;
 		}
@@ -164,7 +170,7 @@
 			memset(s->content, '\0', new_len+1);
 			if(s->content==NULL)
 			{
-				printLog("ERROR malloc customWriteFunction\n");
+				printLog("ERROR malloc customWriteFunction()\n");
 				exit(EXIT_FAILURE);
 			}
 			memcpy(s->content+s->length, ptr, size*nmemb);
@@ -230,7 +236,8 @@
 		{
 			const char *str=(const char*)param;
 			printf("THREAD OUTPUTS: %s\n", str);
-			// simpleGetRequest((const char*)param);
+
+			// simpleGetRequest(str);
 			return NULL;
 		}
 
@@ -238,6 +245,12 @@
 		{
 			size_t i=0;
 			pthread_t threads[(const unsigned int)vecSize];
+			LOGFILE_SIZE=getFileSize(LOGFILE);
+			if( LOGFILE_SIZE > MAX_LOGFILE_SIZE )
+			{
+				newLogFile();
+				printf("GENERATING NEW LOG FILE...\n");
+			}
 			for(i=0;i<vecSize;++i)
 			{
 				char* str=(char*)sources[i];
@@ -274,3 +287,96 @@
 				pthread_join(threads[i], NULL);
 			}//to wait for all threads to finish. 
 		}
+
+
+
+		void newLogFile()
+		{
+			FILE* logHandler=fopen(LOGFILE, "r");
+			if(logHandler==NULL)
+			{
+				printf("newLogFile() Error opening the log file.\n");
+				exit(EXIT_FAILURE);
+			}
+			char *raw=malloc(LOGFILE_SIZE);
+			memset(raw, '\0', LOGFILE_SIZE);
+			fread(raw, LOGFILE_SIZE-1, 1,logHandler);
+			fclose(logHandler);
+			logHandler=NULL;
+			logHandler=fopen(LOGFILE, "w");
+			if(!logHandler)
+			{
+				printf("newLogFile(): Could not open logfile for overwriting\n");
+				exit(EXIT_FAILURE);
+			}
+			fclose(logHandler);
+			logHandler=NULL;
+
+			FILE *oldLog=fopen("lastLog.txt", "w");
+			fwrite(raw, LOGFILE_SIZE, 1, oldLog);
+			fclose(oldLog);
+			oldLog=NULL;
+			LOGFILE_SIZE=0;
+		}
+
+		void wrapperInit()
+		{
+			size_t i=0;
+			// if(wrapper==NULL)
+			// 	wrapper=malloc(sizeof(struct wrapperStruct)*NUMBER_OF_WRAPPER_OBJECTS);
+
+			struct wrapperStruct* p=wrapper;
+			for(i=0;i<NUMBER_OF_WRAPPER_OBJECTS;++i,++p)
+			{
+					
+				p= malloc(sizeof(struct wrapperStruct)+1);
+				printLog("wrapperInit() allocating space for");
+				char *str=toString(i, NULL);
+				printLog(str);
+				free(str);
+				str=NULL;
+
+				p->urlSize=getStringLength(sources[i]);
+				p->url=malloc(p->urlSize+1);
+				memset(p->url, '\0', p->urlSize+1);
+				memcpy(p->url, sources[i], p->urlSize);
+
+				p->fpathSize=getStringLength(fpath[i]);
+				p->fpath=malloc(p->fpathSize +1);
+				memset(p->fpath, '\0', p->fpathSize+1);
+				memcpy(p->fpath, fpath[i], p->fpathSize);
+
+				p->article=NULL;
+			}
+			p=NULL;
+		}
+
+
+
+
+		void addToWrapperByUrl(struct wrapperStruct* x, const char* url){
+			struct wrapperStruct* p=wrapper;
+			while(!duplicate(p->url, url))
+				p++;
+
+			struct articleStruct* pArticle=p->article;
+			if(pArticle==NULL)
+				pArticle=malloc(sizeof(struct articleStruct)+1);
+			// else
+				// pArticle=realloc()
+			if(!pArticle)
+			{
+				printLog("addToWrapperByUrl() could not malloc memory for new article");
+				exit(EXIT_FAILURE);
+			}
+			printLog("addToWrapperByUrl() allocating space for new article...");
+			
+		}
+
+		// void freeWrapper()
+		// {
+		// 	size_t i=0;
+		// 	for(i=0;i<NUMBER_OF_WRAPPER_OBJECTS;++i)
+		// 	{
+		// 	}
+		// }
