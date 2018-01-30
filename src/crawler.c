@@ -321,6 +321,7 @@
 
 
 			size_t i=0;
+			struct wrapperStruct* pWrapper=NULL;
 			for(i=0;i<NUMBER_OF_WRAPPER_OBJECTS;++i)
 			{
 				printf("SOURCE: %s\n", sources[i]);
@@ -331,11 +332,44 @@
 					exit(EXIT_FAILURE);
 				}else{
 					printLog("Successfully allocated memory for source");
-					memset(wrapperArray[i], (void*)0, sizeof(struct wrapperStruct));
+					pWrapper=wrapperArray[i];
+					memset(pWrapper, 0, sizeof(struct wrapperStruct));
 					wrapperArray[i+1]=NULL;
+
+					pWrapper->urlSize=getStringLength(sources[i]);
+					pWrapper->url=malloc(pWrapper->urlSize +1);
+					memset(pWrapper->url, '\0', pWrapper->urlSize+1);
+					memcpy(pWrapper->url, sources[i], pWrapper->urlSize);
 				}
 			}
 
+			for(i=0;i<NUMBER_OF_WRAPPER_OBJECTS;++i)
+			{
+				pWrapper=wrapperArray[i];
+				printf("STORED IN WRAPPER %u is %s\n",i,pWrapper->url);
+			}
+			printf("NUMBER_OF_WRAPPER_OBJECTS: %llu\n", NUMBER_OF_WRAPPER_OBJECTS);
+			for(i=0;i<NUMBER_OF_WRAPPER_OBJECTS;++i)
+			{
+				pWrapper=wrapperArray[i];
+				if(pWrapper->urlSize>0)
+				{
+					free(pWrapper->url);
+					pWrapper->url=NULL;
+					pWrapper->urlSize=0;
+				}
+				if(pWrapper->fpathSize>0)
+				{
+					free(pWrapper->fpath);
+					pWrapper->fpath=NULL;
+					pWrapper->fpathSize=0;
+				}
+
+
+				free(pWrapper);
+				pWrapper=NULL;
+				printLog("freeWrapperArray() successful!");
+			}
 
 
 
@@ -398,10 +432,24 @@
 		{
 			size_t i=0;
 			printf("NUMBER OF SOURCES at freeWrapperArray() function call: %llu\n",NUMBER_OF_WRAPPER_OBJECTS);
-			struct wrapperStruct* pWrapper=wrapperArray[0];
+			struct wrapperStruct* pWrapper;
 			for(i=0;i<NUMBER_OF_WRAPPER_OBJECTS;++i)
 			{
 				pWrapper=wrapperArray[i];
+				if(pWrapper->urlSize>0)
+				{
+					free(pWrapper->url);
+					pWrapper->url=NULL;
+					pWrapper->urlSize=0;
+				}
+				if(pWrapper->fpathSize>0)
+				{
+					free(pWrapper->fpath);
+					pWrapper->fpath=NULL;
+					pWrapper->fpathSize=0;
+				}
+
+
 				free(pWrapper);
 				pWrapper=NULL;
 				printLog("freeWrapperArray() successful!");

@@ -62,7 +62,7 @@
 
 		// extern  const char* sources[];
 		// extern const char* fpath[];
-		static char* sources[]={									
+		static const char* sources[]={									
 				"https://www.nytimes.com/", 	
 				"https://www.wsj.com/",	
 				"https://techcrunch.com/", 
