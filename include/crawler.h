@@ -90,13 +90,13 @@
 				(const char*)NULL
 			};
 
-		extern struct imgListStruct
+		struct imgListStruct
 		{
 			char **img;
 			unsigned long long numberOfImages;
 		};
 
-		extern struct articleStruct
+		struct articleStruct
 		{
 			unsigned long long urlSize;
 			unsigned long long titleSize;
@@ -107,7 +107,7 @@
 			struct imgListStruct** imgList;
 		};
 
-		extern struct wrapperStruct
+		struct wrapperStruct
 		{
 			unsigned long long urlSize;
 			unsigned long long fpathSize;
@@ -117,8 +117,7 @@
 			struct articleStruct** article;
 		};
 
-		extern struct wrapperStruct* wrapper[];
-
+	extern struct wrapperStruct* wrapperArray[];
 //crawler specific function headers	
 
 	unsigned long long getFileSize(const char *fpath);
@@ -166,14 +165,12 @@
 
 
 
-	void wrapperInit();
-	//function that initializes the wrapper container
+	void wrapperArrayInit();
+	//wrapper Array initializer
 
 
-	void freeWrapper();
-	//functions that frees the memory occupied by the wrapper
-
-
+	void freeWrapperArray();
+	//free the memory occupied by the wrapper array and its elements
 
 
 

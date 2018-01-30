@@ -153,6 +153,9 @@ int main(int argc, char **argv)
 	for(NUMBER_OF_WRAPPER_OBJECTS=0;sources[NUMBER_OF_WRAPPER_OBJECTS];++NUMBER_OF_WRAPPER_OBJECTS)
 		printf("\t%s\n", sources[NUMBER_OF_WRAPPER_OBJECTS]);
 
+	struct wrapperStruct* wrapperArray[(const unsigned long long)NUMBER_OF_WRAPPER_OBJECTS];
+
+
 
 	printf("\nNumber of sources: %lu\n\n", NUMBER_OF_WRAPPER_OBJECTS);
 
@@ -216,12 +219,10 @@ int main(int argc, char **argv)
 
 
 
-	wrapperInit();
+	wrapperArrayInit();
 
 
-
-
-	freeWrapper();
+	freeWrapperArray();
 
 
 

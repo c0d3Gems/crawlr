@@ -7,8 +7,8 @@
 
 	unsigned long long NUMBER_OF_WRAPPER_OBJECTS;
 
+	struct wrapperStruct* wrapperArray[];
 
-	struct wrapperStruct* wrapper[];
 
 		unsigned long long getFileSize(const char *fpath)
 		{
@@ -316,35 +316,56 @@
 			LOGFILE_SIZE=0;
 		}
 
-		void wrapperInit()// to be called only once. 
+		void wrapperArrayInit()// to be called only once. 
 		{
+
+
 			size_t i=0;
-			printf("NUMBER_OF_WRAPPER_OBJECTS %llu\n", NUMBER_OF_WRAPPER_OBJECTS);
-			struct wrapperStruct* p=&wrapper[0];
-
-			for(i=0 ; i<NUMBER_OF_WRAPPER_OBJECTS; ++i)
+			for(i=0;i<NUMBER_OF_WRAPPER_OBJECTS;++i)
 			{
-				printf("SOURCE: %s\n", sources[i]);	
-				p=&wrapper[i];
-				p=malloc(sizeof(struct wrapperStruct)+1);
-				printLog("wrapperInit() allocating space for new source: ");
-				printLog(sources[i]);
-
-				p->urlSize=getStringLength(sources[i]);
-				p->url=malloc(p->urlSize+1);
-				memset(p->url, '\0', p->urlSize+1);
-				printf("urlSize: %llu\n", p->urlSize);
-				memcpy(p->url, sources[i], p->urlSize);
-
-				p->fpathSize=getStringLength(fpath[i]);
-				printf("FpathSize: %llu\n", p->fpathSize);
-				p->fpath=malloc(p->fpathSize +1);
-				memset(p->fpath, '\0', p->fpathSize+1);
-				memcpy(p->fpath, fpath[i], p->fpathSize);
-
-				p->numberOfArticles=0;
-				p->article=NULL;
+				printf("SOURCE: %s\n", sources[i]);
+				wrapperArray[i]=malloc(sizeof(struct wrapperStruct));
+				if(!wrapperArray[i])
+				{
+					printLog("wrapperArrayInit() Error when trying to alloc memory for wrapper");
+					exit(EXIT_FAILURE);
+				}else{
+					printLog("Successfully allocated memory for source");
+					memset(wrapperArray[i], (void*)0, sizeof(struct wrapperStruct));
+					wrapperArray[i+1]=NULL;
+				}
 			}
+
+
+
+
+			// size_t i=0;
+			// printf("NUMBER_OF_WRAPPER_OBJECTS %llu\n", NUMBER_OF_WRAPPER_OBJECTS);
+			// wrapper=malloc(sizeof(struct wrapperStruct) * NUMBER_OF_WRAPPER_OBJECTS); 
+			// struct wrapperStruct* p=&wrapper[0];
+			// for(i=0 ; i<NUMBER_OF_WRAPPER_OBJECTS; ++i,++p)
+			// {
+
+			// 	printf("SOURCE: %s\n", sources[i]);
+			// 	// p=malloc(sizeof(struct wrapperStruct)+1);
+			// 	// printLog("wrapperInit() allocating space for new source: ");
+			// 	// printLog(sources[i]);
+			// 	// p=NULL;
+			// 	// p->urlSize=getStringLength(sources[i]);
+			// 	// p->url=malloc(p->urlSize+1);
+			// 	// memset(p->url, '\0', p->urlSize+1);
+			// 	// printf("urlSize: %llu\n", p->urlSize);
+			// 	// memcpy(p->url, sources[i], p->urlSize);
+
+			// 	// p->fpathSize=getStringLength(fpath[i]);
+			// 	// printf("FpathSize: %llu\n", p->fpathSize);
+			// 	// p->fpath=malloc(p->fpathSize +1);
+			// 	// memset(p->fpath, '\0', p->fpathSize+1);
+			// 	// memcpy(p->fpath, fpath[i], p->fpathSize);
+
+			// 	// p->numberOfArticles=0;
+			// 	// p->article=NULL;
+			// }
 		}
 
 
@@ -373,27 +394,17 @@
 			exit(EXIT_FAILURE);
 		}
 
-		void freeWrapper(struct wrapperStruct* wrap)
+		void freeWrapperArray()
 		{
 			size_t i=0;
+			printf("NUMBER OF SOURCES at freeWrapperArray() function call: %llu\n",NUMBER_OF_WRAPPER_OBJECTS);
+			struct wrapperStruct* pWrapper=wrapperArray[0];
 			for(i=0;i<NUMBER_OF_WRAPPER_OBJECTS;++i)
 			{
-	
-					if(wrap->fpath!=NULL)
-					{
-						free(wrap->fpath);
-						wrap->fpath=NULL;
-					}
-					if(wrap->url!=NULL)
-					{
-						free(wrap->url);
-						wrap->url=NULL;
-					}
-					wrap->fpathSize=0;
-					wrap->urlSize=0;
-					free(wrap);
-					wrap=NULL;
-			
+				pWrapper=wrapperArray[i];
+				free(pWrapper);
+				pWrapper=NULL;
+				printLog("freeWrapperArray() successful!");
 			}
 		}
 
