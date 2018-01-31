@@ -121,7 +121,6 @@ int main(int argc, char **argv)
 
 	LOGGING_MODE = 0x0;
 	LOGFILE_SIZE=getFileSize(LOGFILE);
-	NUMBER_OF_WRAPPER_OBJECTS=0;
 
 	printf("[LOGFILE_SIZE] is: %llu bytes!\n", LOGFILE_SIZE);
 
@@ -150,19 +149,19 @@ int main(int argc, char **argv)
 
 
 	printf("THE NEWS SOURCES ARE:\n\n");
-	for(NUMBER_OF_WRAPPER_OBJECTS=0;sources[NUMBER_OF_WRAPPER_OBJECTS];++NUMBER_OF_WRAPPER_OBJECTS)
-		printf("\t%s\n", sources[NUMBER_OF_WRAPPER_OBJECTS]);
+	size_t i=0;
+	for(i=0;sources[i];++i)
+		printf("\t%s\n", sources[i]);
 
-	struct wrapperStruct* wrapperArray[(const unsigned long long)NUMBER_OF_WRAPPER_OBJECTS];
+	const unsigned long long NUMBER_OF_WRAPPER_OBJECTS=(const unsigned long long)i;
 
+	struct wrapperStruct* wrapperArray[(const unsigned long long)i];
 
-
-	printf("\nNumber of sources: %lu\n\n", NUMBER_OF_WRAPPER_OBJECTS);
 
 	writeFunctionCaller(sources, NUMBER_OF_WRAPPER_OBJECTS);
 
 
-	size_t i=0;
+	// size_t i=0;
 
 	// some testing
 
@@ -218,14 +217,12 @@ int main(int argc, char **argv)
 
 
 
-
 	wrapperArrayInit();
 
+	printSources();
+	printPaths();
 
-	// freeWrapperArray();
-
-
-
+	freeWrapperArray();
 
 
 	return 0;

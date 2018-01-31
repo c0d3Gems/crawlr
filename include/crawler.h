@@ -56,12 +56,6 @@
 		extern unsigned long long LOGFILE_SIZE;
 		//for keeping track of the log file size
 
-
-		extern unsigned long long NUMBER_OF_WRAPPER_OBJECTS;
-		//to keep track of the number of wrapper objects
-
-		// extern  const char* sources[];
-		// extern const char* fpath[];
 		static const char* sources[]={									
 				"https://www.nytimes.com/", 	
 				"https://www.wsj.com/",	
@@ -89,7 +83,7 @@
 				"dlds/telegraph",
 				(const char*)NULL
 			};
-
+	
 		struct imgListStruct
 		{
 			char **img;

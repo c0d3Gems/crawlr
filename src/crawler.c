@@ -5,8 +5,6 @@
 	unsigned short LOGGING_MODE;
 	unsigned long long LOGFILE_SIZE;
 
-	unsigned long long NUMBER_OF_WRAPPER_OBJECTS;
-
 	struct wrapperStruct* wrapperArray[];
 
 
@@ -322,84 +320,33 @@
 
 			size_t i=0;
 			struct wrapperStruct* pWrapper=NULL;
-			for(i=0;i<NUMBER_OF_WRAPPER_OBJECTS;++i)
+			for(i=0;getStringLength(sources[i]);++i)
 			{
-				printf("SOURCE: %s\n", sources[i]);
 				wrapperArray[i]=malloc(sizeof(struct wrapperStruct));
 				if(!wrapperArray[i])
 				{
 					printLog("wrapperArrayInit() Error when trying to alloc memory for wrapper");
 					exit(EXIT_FAILURE);
 				}else{
-					printLog("Successfully allocated memory for source");
+
 					pWrapper=wrapperArray[i];
 					memset(pWrapper, 0, sizeof(struct wrapperStruct));
 					wrapperArray[i+1]=NULL;
+					printLog("Successfully allocated memory for wrapper");
 
 					pWrapper->urlSize=getStringLength(sources[i]);
 					pWrapper->url=malloc(pWrapper->urlSize +1);
 					memset(pWrapper->url, '\0', pWrapper->urlSize+1);
 					memcpy(pWrapper->url, sources[i], pWrapper->urlSize);
+					printLog("Successfully allocated memory for wrapperArray->url");
+
+					pWrapper->fpathSize=getStringLength(fpath[i]);
+					pWrapper->fpath=malloc(pWrapper->fpathSize +1);
+					memset(pWrapper->fpath, '\0', pWrapper->fpathSize+1);
+					memcpy(pWrapper->fpath, fpath[i], pWrapper->fpathSize);
+					printLog("Successfully allocated memory for wrapperArray->fpath");
 				}
 			}
-
-			for(i=0;i<NUMBER_OF_WRAPPER_OBJECTS;++i)
-			{
-				pWrapper=wrapperArray[i];
-				printf("STORED IN WRAPPER %u is %s\n",i,pWrapper->url);
-			}
-			printf("NUMBER_OF_WRAPPER_OBJECTS: %llu\n", NUMBER_OF_WRAPPER_OBJECTS);
-			for(i=0;i<NUMBER_OF_WRAPPER_OBJECTS;++i)
-			{
-				pWrapper=wrapperArray[i];
-				if(pWrapper->urlSize>0)
-				{
-					free(pWrapper->url);
-					pWrapper->url=NULL;
-					pWrapper->urlSize=0;
-				}
-				if(pWrapper->fpathSize>0)
-				{
-					free(pWrapper->fpath);
-					pWrapper->fpath=NULL;
-					pWrapper->fpathSize=0;
-				}
-
-
-				free(pWrapper);
-				pWrapper=NULL;
-				printLog("freeWrapperArray() successful!");
-			}
-
-
-
-			// size_t i=0;
-			// printf("NUMBER_OF_WRAPPER_OBJECTS %llu\n", NUMBER_OF_WRAPPER_OBJECTS);
-			// wrapper=malloc(sizeof(struct wrapperStruct) * NUMBER_OF_WRAPPER_OBJECTS); 
-			// struct wrapperStruct* p=&wrapper[0];
-			// for(i=0 ; i<NUMBER_OF_WRAPPER_OBJECTS; ++i,++p)
-			// {
-
-			// 	printf("SOURCE: %s\n", sources[i]);
-			// 	// p=malloc(sizeof(struct wrapperStruct)+1);
-			// 	// printLog("wrapperInit() allocating space for new source: ");
-			// 	// printLog(sources[i]);
-			// 	// p=NULL;
-			// 	// p->urlSize=getStringLength(sources[i]);
-			// 	// p->url=malloc(p->urlSize+1);
-			// 	// memset(p->url, '\0', p->urlSize+1);
-			// 	// printf("urlSize: %llu\n", p->urlSize);
-			// 	// memcpy(p->url, sources[i], p->urlSize);
-
-			// 	// p->fpathSize=getStringLength(fpath[i]);
-			// 	// printf("FpathSize: %llu\n", p->fpathSize);
-			// 	// p->fpath=malloc(p->fpathSize +1);
-			// 	// memset(p->fpath, '\0', p->fpathSize+1);
-			// 	// memcpy(p->fpath, fpath[i], p->fpathSize);
-
-			// 	// p->numberOfArticles=0;
-			// 	// p->article=NULL;
-			// }
 		}
 
 
@@ -431,9 +378,8 @@
 		void freeWrapperArray()
 		{
 			size_t i=0;
-			printf("NUMBER OF SOURCES at freeWrapperArray() function call: %llu\n",NUMBER_OF_WRAPPER_OBJECTS);
-			struct wrapperStruct* pWrapper;
-			for(i=0;i<NUMBER_OF_WRAPPER_OBJECTS;++i)
+			struct wrapperStruct* pWrapper=NULL;
+			for(i=0;getStringLength(sources[i]);++i)
 			{
 				pWrapper=wrapperArray[i];
 				if(pWrapper->urlSize>0)
@@ -460,8 +406,25 @@
 		void printSources()
 		{
 			size_t i=0;
-			for(i=0;i<NUMBER_OF_WRAPPER_OBJECTS;++i)
+			struct wrapperStruct *pWrapper=wrapperArray[i];
+			while(pWrapper!=NULL)
 			{
-				printf("WRAPPER OBJECT %s\n", sources[i]);
+				printf("SOURCE: %s\n", pWrapper->url);
+				++i;
+				pWrapper=wrapperArray[i];
+			}
+		}
+		
+
+
+		void printPaths()
+		{
+			size_t i=0;
+			struct wrapperStruct *pWrapper=wrapperArray[i];
+			while(pWrapper!=NULL)
+			{
+				printf("FPATH: %s\n", pWrapper->fpath);
+				++i;
+				pWrapper=wrapperArray[i];
 			}
 		}
