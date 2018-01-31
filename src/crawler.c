@@ -154,26 +154,26 @@
 
 
 
-		unsigned short 
-		customWriteFunction(void *ptr, size_t size, size_t nmemb, struct string *s)
-		{
-			size_t new_len = s->length + size*nmemb;
+		// unsigned short 
+		// customWriteFunction(void *ptr, size_t size, size_t nmemb, struct string *s)
+		// {
+		// 	size_t new_len = s->length + size*nmemb;
 
-			free(s->content);
-			s->content=NULL;
-			s->content=malloc(new_len+1);
-			memset(s->content, '\0', new_len+1);
-			if(s->content==NULL)
-			{
-				printLog("ERROR malloc customWriteFunction()\n");
-				exit(EXIT_FAILURE);
-			}
-			memcpy(s->content+s->length, ptr, size*nmemb);
-			s->content[new_len]='\0';
-			s->length=new_len;
+		// 	free(s->content);
+		// 	s->content=NULL;
+		// 	s->content=malloc(new_len+1);
+		// 	memset(s->content, '\0', new_len+1);
+		// 	if(s->content==NULL)
+		// 	{
+		// 		printLog("ERROR malloc customWriteFunction()\n");
+		// 		exit(EXIT_FAILURE);
+		// 	}
+		// 	memcpy(s->content+s->length, ptr, size*nmemb);
+		// 	s->content[new_len]='\0';
+		// 	s->length=new_len;
 
-			return size*nmemb;
-		}
+		// 	return size*nmemb;
+		// }
 
 
 
@@ -227,6 +227,7 @@
 			}
 		}
 
+		//function that executes for each thread, once.
 		void* threadFunc(void* param)
 		{
 			const char *str=(const char*)param;
@@ -236,7 +237,7 @@
 			return NULL;
 		}
 
-		size_t writeFunctionCaller(const char **sources, size_t vecSize)
+		size_t checkForNewContent(const char **sources, size_t vecSize)
 		{
 			size_t i=0;
 			pthread_t threads[(const unsigned int)vecSize];
@@ -427,4 +428,15 @@
 				++i;
 				pWrapper=wrapperArray[i];
 			}
+		}
+
+		size_t customWriteFunction(void* payload, size_t size, size_t nmemb, struct wrapperStruct* pWrapper)
+		{
+			const char* url=(const char*)pWrapper->url;
+
+		}
+
+		char* getContentFromUrl(const char* url)
+		{
+
 		}

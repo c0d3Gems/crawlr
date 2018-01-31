@@ -130,8 +130,8 @@
 
 
 
-	unsigned short
-	customWriteFunction(void* payload,size_t size,size_t times,struct string* str);
+	// unsigned short
+	// customWriteFunction(void* payload,size_t size,size_t times,struct string* str);
 	//custom fwrite implmentation to fit our crawler's needs
 
 
@@ -147,11 +147,11 @@
 
 
 	void* threadFunc(void* param);
-	// function enclosure for our thread calls
+	// function enclosure for our thread spawning
 	
 
 
-	size_t writeFunctionCaller(const char **sources, size_t vecSize);
+	size_t checkForNewContent(const char **sources, size_t vecSize);
 	// in a multi threaded environment, here we spawn the threads
 
 	void newLogFile();
@@ -167,9 +167,19 @@
 	//free the memory occupied by the wrapper array and its elements
 
 
+	void printSources();
+	//print url sources to the command line (standard output)
 
+	void printPaths();
+	//print paths to the command line (standard output)
 
+	size_t customWriteFunction(void* payload, size_t size, size_t nmemb, struct wrapperStruct* pWrapper);
+	//custom write function for threaded writing of output to a variable
 
+	char* getContentFromUrl(const char* url);
+	//sends a custom request to the url mentioned as parameter
 
+	void initContentInWrapperObject(const char* url, struct wrapperStruct* pWrapper);
+	//this allocates space for the content in the wrapper object that has the same url
 
 	#endif	

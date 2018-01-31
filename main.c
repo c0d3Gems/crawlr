@@ -158,7 +158,7 @@ int main(int argc, char **argv)
 	struct wrapperStruct* wrapperArray[(const unsigned long long)i];
 
 
-	writeFunctionCaller(sources, NUMBER_OF_WRAPPER_OBJECTS);
+	checkForNewContent(sources, NUMBER_OF_WRAPPER_OBJECTS);
 
 
 	// size_t i=0;
