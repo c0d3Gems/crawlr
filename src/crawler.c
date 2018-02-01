@@ -430,13 +430,38 @@
 			}
 		}
 
-		size_t customWriteFunction(void* payload, size_t size, size_t nmemb, struct wrapperStruct* pWrapper)
+		size_t customWriteFunction(char* payload, size_t size, size_t nmemb, const char* dest)
 		{
-			const char* url=(const char*)pWrapper->url;
-
+			FILE *fHandler=fopen(dest, "w");
+			if(fHandler)
+			{
+				fwrite(payload, size, nmemb, fHandler);
+				fclose(fHandler);
+				fHandler=NULL;
+				printLog("Successfully wrote content to destination");
+				return 1;
+			}
+			else
+			{
+				printLog("customWriteFunction() Could not open the new file for writing!");
+				exit(EXIT_FAILURE);
+			}
+			return 0;
 		}
 
 		char* getContentFromUrl(const char* url)
 		{
 
+		}
+
+		void scrapeContent(struct wrapperStruct* pWrapper)
+		{
+			if(pWrapper)
+			{
+				if(duplicate(pWrapper->url, sources[0]))
+				{//this is to verify if our news come from nyTimes since every website uses different keywords in their HTML to name article titles, content, images, etc. 
+
+					return;
+				}
+			}
 		}

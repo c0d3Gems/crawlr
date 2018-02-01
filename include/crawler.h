@@ -30,7 +30,6 @@
 			#define false 0
 			#define true !false
 		#endif
-		//simple bool values
 
 		#ifndef NULL
 			#define NULL ((void*)0)
@@ -38,7 +37,7 @@
 
 		#ifndef LOGFILE
 			#define LOGFILE "log.txt"
-			#define MAX_LOGFILE_SIZE 512024
+			#define MAX_LOGFILE_SIZE 512024 //max number of bytes for the logFile 
 		#endif	
 
 		#ifndef CONCAT
@@ -173,7 +172,8 @@
 	void printPaths();
 	//print paths to the command line (standard output)
 
-	size_t customWriteFunction(void* payload, size_t size, size_t nmemb, struct wrapperStruct* pWrapper);
+	
+	size_t customWriteFunction(char* payload, size_t size, size_t nmemb, const char* dest);
 	//custom write function for threaded writing of output to a variable
 
 	char* getContentFromUrl(const char* url);
@@ -181,5 +181,12 @@
 
 	void initContentInWrapperObject(const char* url, struct wrapperStruct* pWrapper);
 	//this allocates space for the content in the wrapper object that has the same url
+
+	void scrapeContent(struct wrapperStruct* pWrapper);
+	//this function will remove the irellevant code from the page. 
+
+
+
+
 
 	#endif	

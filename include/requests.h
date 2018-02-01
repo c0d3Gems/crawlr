@@ -6,7 +6,7 @@
 		
 	
 		
-		void simpleGetRequest(const char*);
+		void simpleGetRequest(const char* url, FILE* fHandler);
 		//function that performs a simple get request to the url mentioned as a parameter
 	
 		

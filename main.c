@@ -72,6 +72,8 @@
 
 // 		curl_easy_setopt(curl, CURLOPT_URL, url); //provide the url link we want to visit
 
+//		CURLcode curl_easy_setopt(CURL *handle, CURLOPT_WRITEDATA, void *pointer);
+
 // 		// curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeFunction); //call a custom writefunction instead of fwrite
 
 // 		// curl_easy_setopt(curl, CURLOPT_WRITEDATA, &s);//where to write the output 
@@ -161,10 +163,6 @@ int main(int argc, char **argv)
 	checkForNewContent(sources, NUMBER_OF_WRAPPER_OBJECTS);
 
 
-	// size_t i=0;
-
-	// some testing
-
 	for(i=0;sources[i];++i)
 	{
 		char *fIndex=genIndexFileName(sources[i]);
@@ -217,12 +215,22 @@ int main(int argc, char **argv)
 
 
 
-	wrapperArrayInit();
+	// wrapperArrayInit();
 
-	printSources();
-	printPaths();
+	// printSources();
+	// printPaths();
 
-	freeWrapperArray();
+	// freeWrapperArray();
+
+
+	FILE *testDownloadFile=fopen("test.html", "w");
+	if(testDownloadFile)
+		simpleGetRequest("https://www.wsj.com/articles/how-j-d-power-was-acquired-by-a-chinese-company-shrouded-in-mystery-1517426465", testDownloadFile);
+	else
+	{
+		printLog("Main() Could not open file for test writing in simple get request");
+		exit(EXIT_FAILURE);
+	}
 
 
 	return 0;
