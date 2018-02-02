@@ -448,20 +448,42 @@
 			}
 			return 0;
 		}
-
-		char* getContentFromUrl(const char* url)
+		void extractLinks(char *rawHtml, struct string ** str)
 		{
-
-		}
-
-		void scrapeContent(struct wrapperStruct* pWrapper)
-		{
-			if(pWrapper)
+			unsigned long long i=0;
+			printf("extractLinks() function call\n");
+			while(true)
 			{
-				if(duplicate(pWrapper->url, sources[0]))
-				{//this is to verify if our news come from nyTimes since every website uses different keywords in their HTML to name article titles, content, images, etc. 
+				i=findPattern(&rawHtml[i], " href=");
+				if(i<2)
+					break;
+					else
+					printf("FOUND LINK");
+				// while(rawHtml[i]!=' ')
+				// {
+				// 	printf("%c", rawHtml[i]);
+				// 	++i;
+				// }
+				// printf("\n");
 
-					return;
-				}
 			}
 		}
+
+
+
+		// char* getContentFromUrl(const char* url)
+		// {
+
+		// }
+
+		// void scrapeContent(struct wrapperStruct* pWrapper)
+		// {
+		// 	if(pWrapper)
+		// 	{
+		// 		if(duplicate(pWrapper->url, sources[0]))
+		// 		{//this is to verify if our news come from nyTimes since every website uses different keywords in their HTML to name article titles, content, images, etc. 
+
+		// 			return;
+		// 		}
+		// 	}
+		// }

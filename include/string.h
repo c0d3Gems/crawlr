@@ -4,7 +4,7 @@
 
 	
 
-		extern struct string
+		struct string
 		{
 			char* content;
 			unsigned long long length;

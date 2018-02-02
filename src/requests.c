@@ -3,7 +3,7 @@
 	#include "../include/crawler.h"
 
 		
-		void simpleGetRequest(const char* url, FILE* fHandler)
+		void customGetRequest(const char* url, FILE* fHandler)
 		{
 			CURL *curl;
 			CURLcode res;
@@ -35,7 +35,6 @@
 
 				next:;
 				//end of custom headers
-
 				curl_easy_setopt(curl, CURLOPT_HTTPHEADER, list);//parsing the custom headers
 				curl_easy_setopt(curl, CURLOPT_URL, url);
 				curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)fHandler);
@@ -58,7 +57,7 @@
 
 		}
 
-		void customGetRequest(const char* url)
+		void simpleGetRequest(const char* url)
 		{
 			size_t i=0;
 			for(i=0;sources[i]!=NULL;++i)

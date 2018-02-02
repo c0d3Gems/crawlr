@@ -6,11 +6,11 @@
 		
 	
 		
-		void simpleGetRequest(const char* url, FILE* fHandler);
+		void customGetRequest(const char* url, FILE* fHandler);
 		//function that performs a simple get request to the url mentioned as a parameter
 	
 		
-		void customGetRequest(const char*);
+		void simpleGetRequest(const char*);
 		//function that performs a custom get request to the url mentioned as a parameter, with custom headers predefined 
 		
 

@@ -182,6 +182,11 @@
 	void initContentInWrapperObject(const char* url, struct wrapperStruct* pWrapper);
 	//this allocates space for the content in the wrapper object that has the same url
 
+	void extractLinks(char *,struct string **);
+	//function that analyzes the rawHtml (first parameter)
+	//and returns all of the relevant links from an article in 
+	//an array of strings (second parameter)
+
 	void scrapeContent(struct wrapperStruct* pWrapper);
 	//this function will remove the irellevant code from the page. 
 
