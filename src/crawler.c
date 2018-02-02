@@ -448,24 +448,27 @@
 			}
 			return 0;
 		}
+
 		void extractLinks(char *rawHtml, struct string ** str)
 		{
 			unsigned long long i=0;
-			printf("extractLinks() function call\n");
 			while(true)
 			{
-				i=findPattern(&rawHtml[i], " href=");
-				if(i<2)
-					break;
-					else
-					printf("FOUND LINK");
-				// while(rawHtml[i]!=' ')
-				// {
-				// 	printf("%c", rawHtml[i]);
-				// 	++i;
-				// }
-				// printf("\n");
-
+				i=findPatternFromPosition(rawHtml, " href=", i);
+				if(i==0)
+				{
+					printLog("extractLinks(): Reached end of string\n");
+					return;	
+				}
+				printLog("LINK FOUND AT POSITION:\n");
+				char* stringI=toString(i, NULL);
+				printLog(stringI);
+				free(stringI);
+				i++;
+				/*here we will allocate memory for the string objects, instead of printing, in a future release*/
+				for(i;rawHtml[i]!='"'&&rawHtml[i]!='\'';++i)
+					printf("%c", rawHtml[i]);
+				printf("\n");
 			}
 		}
 

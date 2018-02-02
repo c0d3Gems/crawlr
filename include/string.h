@@ -23,7 +23,8 @@
 		unsigned long long findPattern(char*, char*);
 		//returns the ending position where the pattern was found in the greater string. 
 
-
+		unsigned long long findPatternFromPosition(char* str, char* pat, unsigned long long position);
+		//find pattern after the given position. 
 
 		unsigned short duplicate(char* a, char *b);
 		//returns 1 (true) if str a is equal to str b

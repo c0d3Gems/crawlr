@@ -177,13 +177,13 @@ int main(int argc, char **argv)
 
 
 
-	printf("\n");
-	printf("Pattern found? %s\t%s %llu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "http"));
-	printf("Pattern found? %s\t%s %llu\n", sources[1], "wsj.com", findPattern((char*)sources[1], "wsj.com"));
-	printf("Pattern found? %s\t%s %llu\n", sources[2], "techcrunch.com", findPattern((char*)sources[2], "techcrunch.com"));
-	printf("Pattern found? %s\t%s %llu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimes.com"));
-	printf("Pattern found? %s\t%s %llu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimes.com"));
-	printf("Pattern found? %s\t%s %llu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimes.com"));
+	// printf("\n");
+	// printf("Pattern found? %s\t%s %llu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "http"));
+	// printf("Pattern found? %s\t%s %llu\n", sources[1], "wsj.com", findPattern((char*)sources[1], "wsj.com"));
+	// printf("Pattern found? %s\t%s %llu\n", sources[2], "techcrunch.com", findPattern((char*)sources[2], "techcrunch.com"));
+	// printf("Pattern found? %s\t%s %llu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimes.com"));
+	// printf("Pattern found? %s\t%s %llu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimes.com"));
+	// printf("Pattern found? %s\t%s %llu\n", sources[0], "nytimes.com", findPattern((char*)sources[0], "nytimes.com"));
 
 
 	printf("The file size of main.c is: %llu bytes\n", getFileSize((const char*)"main.c"));
@@ -210,6 +210,8 @@ int main(int argc, char **argv)
 
 	printf("\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\n\n\n\n\n");
 
+	printf("findPat(): %llu\n", findPattern("This is fucking awesome!", "This"));
+
 
 
 
@@ -224,24 +226,29 @@ int main(int argc, char **argv)
 
 
 	FILE *testDownloadFile=fopen("test.html", "w");
-	if(testDownloadFile)
-	{	customGetRequest("https://www.wsj.com/articles/how-j-d-power-was-acquired-by-a-chinese-company-shrouded-in-mystery-1517426465", testDownloadFile);
+	if(testDownloadFile){
+		customGetRequest("https://www.wsj.com/articles/how-j-d-power-was-acquired-by-a-chinese-company-shrouded-in-mystery-1517426465", testDownloadFile);
 	fclose(testDownloadFile);
-	testDownloadFile=NULL;
+	}
 
-	testDownloadFile=fopen("test.html", "r");
-	fseek(testDownloadFile, 0L, SEEK_END);
-	unsigned long long testFileSize=ftell(testDownloadFile);
-	char *rawHtml=malloc(testFileSize+1);
-	memset(rawHtml, '\0', testFileSize+1);
-	fread(rawHtml, testFileSize, 1, testDownloadFile);
-	struct string** str;
-	extractLinks(rawHtml, str);
 
-	free(rawHtml);
-	rawHtml=NULL;
-	fclose(testDownloadFile);
-	testDownloadFile=NULL;
+
+
+
+	FILE *testFileHandler=fopen("test.html", "r");
+	if(testFileHandler)
+	{
+		unsigned long long testFileSize=getFileSize("test.html");
+		char *rawHtml=malloc(testFileSize+1);
+		memset(rawHtml, '\0', testFileSize+1);
+		fread(rawHtml, testFileSize, 1, testFileHandler);
+		struct string** str;
+		extractLinks(rawHtml, str);
+
+		free(rawHtml);
+		rawHtml=NULL;
+		fclose(testFileHandler);
+		testFileHandler=NULL;
 	}
 	else
 	{

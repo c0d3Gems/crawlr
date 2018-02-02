@@ -47,6 +47,23 @@
 			return 0;
 		}
 
+		unsigned long long findPatternFromPosition(char* str, char* pat, unsigned long long position)
+		{
+			unsigned long long i=0,j=0;
+			for(i=position;str[i]!='\0';++i)
+			{
+				if(str[i]==pat[j])
+				{
+					while(str[i]==pat[j]){ ++i; ++j; }
+					if(pat[j]=='\0')
+						return i;
+					else
+						{i-=j;j=0;}
+				}
+			}
+			return 0;
+		}
+
 		unsigned short duplicate(char *a, char* b)
 		{
 			char *pa=a,*pb=b;
@@ -60,7 +77,6 @@
 				pb++;
 			}
 		}
-
 
 		void flipString(char* a)
 		{
