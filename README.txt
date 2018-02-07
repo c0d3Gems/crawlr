@@ -6,7 +6,7 @@ What you'll need:
 
     1. A linux distro (I'm using Debian 9)
 
-    2. Install dependencies (libcurl-dev3, build-essential, gcc, curl), 
+    2. Install dependencies (libcurl-dev4*, build-essential, gcc, curl, cmake), 
     you can just run the setup.sh as root and you're set.
 
     3. (Optional) Valgrind - for memory leak testing. 
@@ -19,6 +19,23 @@ What you'll need:
     the structure in the crawler.h header file. (actual link following
     not implemented just yet, but will come soon.)  
 
+How to install:
+
+    1. Simply download this repo / clone it. 
+
+    2. Run sh setup.sh as root. (On Debian & Ubuntu. Not tested on other distros).
+
+    3. Build by running 'make'
+
+How to run:
+
+    1. Simply run 'make r' or './crawler' for basic run
+
+    2. If you want to do some memory leaking testing with valgrind, use
+    'make v' or 'valgrind ./crawler'
+
+    3. Check the new generated file if it has the article you were 
+    intending for crawlr to download. 
 
 Implemented stuff: 
     
