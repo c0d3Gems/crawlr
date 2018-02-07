@@ -23,7 +23,7 @@ How to install:
 
     1. Simply download this repo / clone it. 
 
-    2. Run sh setup.sh as root. (On Debian & Ubuntu. Not tested on other distros).
+    2. Run 'sh setup.sh' as root. (On Debian & Ubuntu. Not tested on other distros).
 
     3. Build by running 'make'
 
