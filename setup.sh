@@ -2,4 +2,4 @@
 
 
 
-apt-get install libcurl4-openssl-dev libcurl4-gnutls-dev libcurl4-nss-dev curl cmake build-essential gcc valgrind -y
+apt-get install libcurl3 curl cmake make build-essential gcc valgrind -y
