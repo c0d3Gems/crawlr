@@ -5,7 +5,7 @@
 
 
 all: main.c #build everything
-	clear && cc -Wall -lcurl -lpthread -O2 -o crawler main.c src/*
+	clear && cc -O2 -o crawler main.c src/* -Wall -lcurl -lpthread
 
 r: crawler  #basic test run 
 	clear && ./crawler
